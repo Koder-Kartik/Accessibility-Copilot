@@ -15,7 +15,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
 const MOCK_MODE = process.env.MOCK_MODE === "1";
 const MODEL = process.env.CLAUDE_MODEL || "claude-opus-4-8";
-const DB_FILE = process.env.DB_FILE || path.join(__dirname, "data", "copilot.db");
+const DB_FILE =
+  process.env.DB_FILE ??
+  (process.env.VERCEL
+    ? "/tmp/copilot.db"
+    : "./data/copilot.db");
 const MAX_INPUT_CHARS = 60_000;
 
 const db = openDb(DB_FILE);
