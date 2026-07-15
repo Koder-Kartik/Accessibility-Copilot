@@ -1,5 +1,6 @@
 import express from "express";
 import crypto from "node:crypto";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -25,7 +26,9 @@ try {
 }
 const PORT = process.env.PORT || 3000;
 const MOCK_MODE = process.env.MOCK_MODE === "1";
-const DB_FILE = process.env.DB_FILE || path.join(__dirname, "data", "copilot.db");
+const DB_FILE =
+  process.env.DB_FILE ||
+  path.join(os.tmpdir(), "copilot.db");
 const MAX_INPUT_CHARS = 60_000;
 
 const db = openDb(DB_FILE);
