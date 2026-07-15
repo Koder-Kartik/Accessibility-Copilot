@@ -204,8 +204,13 @@ async function runStream({ send, systemBlocks, userContent, onDone }) {
     await onDone?.(full);
     send("done", { stopReason, truncated: stopReason === "max_tokens" });
   } catch (err) {
-    send("error", { message: provider.friendlyError(err) });
-  }
+  console.error("FULL GEMINI ERROR:");
+  console.error(err);
+
+  send("error", {
+    message: provider.friendlyError(err),
+  });
+}
 }
 
 // ---- Transform ----
