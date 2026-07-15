@@ -35,18 +35,6 @@ const db = openDb(DB_FILE);
 
 // Pick the AI backend (Claude or Gemini) from whichever key is configured.
 const providerCfg = resolveProvider();
-
-console.log("=== GEMINI DEBUG ===");
-console.log({
-  hasGeminiKey: !!process.env.GEMINI_API_KEY,
-  keyPrefix: process.env.GEMINI_API_KEY?.substring(0, 5),
-  keyLength: process.env.GEMINI_API_KEY?.length,
-  provider: providerCfg.name,
-  model: providerCfg.model,
-  hasGoogleApplicationCredentials: !!process.env.GOOGLE_APPLICATION_CREDENTIALS,
-});
-console.log("====================");
-
 const provider = !MOCK_MODE && providerCfg.ok ? createProvider(providerCfg) : null;
 if (!MOCK_MODE && !provider) {
   console.warn(
@@ -216,13 +204,8 @@ async function runStream({ send, systemBlocks, userContent, onDone }) {
     await onDone?.(full);
     send("done", { stopReason, truncated: stopReason === "max_tokens" });
   } catch (err) {
-  console.error("FULL GEMINI ERROR:");
-  console.error(err);
-
-  send("error", {
-    message: provider.friendlyError(err),
-  });
-}
+    send("error", { message: provider.friendlyError(err) });
+  }
 }
 
 // ---- Transform ----
