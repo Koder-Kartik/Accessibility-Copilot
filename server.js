@@ -369,6 +369,39 @@ function streamMockAsk(send, question) {
   ]);
 }
 
+app.get("/api/test-gemini", async (req, res) => {
+  try {
+    const r = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: "Say hello",
+                },
+              ],
+            },
+          ],
+        }),
+      }
+    );
+
+    const text = await r.text();
+
+    res.status(r.status).send(text);
+  } catch (e) {
+    res.status(500).json({
+      error: String(e),
+    });
+  }
+});
+
 app.listen(PORT, () => {
   const backend = MOCK_MODE
     ? "DEMO mode — no API calls"
